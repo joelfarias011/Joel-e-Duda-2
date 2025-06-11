@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Joel & Maria Eduarda 💘</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+  <h1>Joel & Maria Eduarda 💘</h1>
+  <p>Estamos juntos há <strong id="dias-juntos">...</strong> dias!</p>
+
+  <section class="player-romantico">
+    <h2>Nossa Trilha Sonora 🎵</h2>
+    <div class="youtube-players">
+      <a href="https://www.youtube.com/watch?v=9Sk7RQtSl5g" target="_blank" rel="noopener noreferrer" class="youtube-thumb">
+        <img src="https://img.youtube.com/vi/9Sk7RQtSl5g/hqdefault.jpg" alt="Pupila - Anavitória ft. Vitor Kley" />
+        <span>Pupila - Anavitória ft. Vitor Kley</span>
+      </a>
+
+      <a href="https://www.youtube.com/watch?v=-x2cE--r3L8" target="_blank" rel="noopener noreferrer" class="youtube-thumb" style="margin-top: 20px;">
+        <img src="https://img.youtube.com/vi/-x2cE--r3L8/hqdefault.jpg" alt="Maria - Matuê" />
+        <span>Maria - Matuê</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="galeria">
+    <h2>Nossos Momentos</h2>
+    <div class="filtros">
+      <button data-filtro="normal" class="ativo">Normal</button>
+      <button data-filtro="sepia">Sépia</button>
+      <button data-filtro="rosado">Rosado</button>
+      <button data-filtro="brilho">Brilho</button>
+    </div>
+    <div class="slideshow normal">
+      {% for i in range(1, 12) %}
+        <img src="{{ url_for('static', filename='images/foto' ~ i ~ '.jpeg') }}" alt="Foto {{ i }}" />
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="linha-do-tempo">
+    <h2>Nosso Amor em Datas</h2>
+    <ul>
+      <li><strong>12/01/2021</strong> – Nosso primeiro dia juntos 🌟</li>
+      <li><strong>09/02/2021</strong> – Seu primeiro aniversário comigo 🎂</li>
+      <li><strong>12/06/2021</strong> – Primeiro Dia dos Namorados ✨</li>
+    </ul>
+  </section>
+
+  <section class="mapa-section">
+    <h2>Onde Nos Conhecemos ❤️</h2>
+    <div id="mapa" style="height: 300px;"></div>
+  </section>
+
+  <section class="carta-animada">
+    <h2>Minha Declaração 💌</h2>
+    <div class="carta" tabindex="0">
+      <div class="frente">Clique para abrir</div>
+      <div class="verso">
+        Meu amor, cada momento ao seu lado é uma constelação no meu universo. Você transforma minhas noites em sonhos reais. Obrigado por existir, te amo mais do que palavras podem dizer. ✨
+      </div>
+    </div>
+  </section>
+
+  <section class="poesias">
+    <h2>Palavras do Coração 💭</h2>
+    <blockquote>"Se eu tivesse que escolher entre te amar e respirar, usaria meu último suspiro para dizer: eu te amo."</blockquote>
+    <blockquote>"Em um mundo cheio de incertezas, você é minha certeza mais bonita."</blockquote>
+    <blockquote>"Não preciso de mil motivos para sorrir, você já é o suficiente."</blockquote>
+  </section>
+
+  <footer>
+    <p>Feito com 💗 por Joel</p>
+    <p id="frase-rodape">Você é meu hoje, meu amanhã e meu sempre.</p>
+  </footer>
+
+  <script>
+    const frases = [
+      "Você é meu hoje, meu amanhã e meu sempre.",
+      "Te escolher foi a melhor decisão da minha vida.",
+      "Nosso amor é meu lugar favorito no mundo.",
+      "Com você, todos os dias valem a pena. 💑"
+    ];
+    let fraseIndex = 0;
+    setInterval(() => {
+      fraseIndex = (fraseIndex + 1) % frases.length;
+      document.getElementById("frase-rodape").textContent = frases[fraseIndex];
+    }, 4000);
+
+    // Filtro da galeria
+    const botoesFiltro = document.querySelectorAll('.filtros button');
+    const slideshow = document.querySelector('.slideshow');
+
+    botoesFiltro.forEach(btn => {
+      btn.addEventListener('click', () => {
+        botoesFiltro.forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        const filtro = btn.getAttribute('data-filtro');
+        slideshow.className = 'slideshow ' + filtro;
+      });
+    });
+
+    // Mapa
+    const mapa = L.map('mapa').setView([-5.054207, -42.793926], 16);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+    }).addTo(mapa);
+    L.marker([-5.054207, -42.793926]).addTo(mapa)
+      .bindPopup('Condomínio Margens do Poty - Onde tudo começou ❤️')
+      .openPopup();
+    function atualizarDiasJuntos() {
+      const dataInicio = new Date(2021, 0, 12); // mês 0 = janeiro
+      const hoje = new Date();
+
+      const diffMs = hoje - dataInicio;
+      const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      const el = document.getElementById('dias-juntos');
+      if (el) {
+        el.textContent = diffDias;
+      }
+    }
+
+    atualizarDiasJuntos();
+  </script>
+</body>
+</html>
